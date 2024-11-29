@@ -1,0 +1,20 @@
+name: 'Build front image to Docker hub'
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish_images:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: build image
+      run: docker buildx build -t huaat/provident-fund-calulator:latest .
+
+    - name: push image to docker hub
+      run: |
+        docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+        docker push huaat/provident-fund-calulator:latest
